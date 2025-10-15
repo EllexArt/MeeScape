@@ -1,0 +1,24 @@
+[
+  {
+    "id": "start",
+    "character": "Duo",
+    "avatar": "duo.png",
+    "text": "Bienvenue sur le serveur d'apprentissage des langues ! Prêt à progresser ?",
+    "choices": [
+      { "text": "Oui, commençons !", "next": "go" },
+      { "text": "Je veux changer de langue.", "next": "lang" }
+    ]
+  },
+  {
+    "id": "go",
+    "character": "Duo",
+    "avatar": "duo.png",
+    "text": "Super ! Choisis un salon pour discuter ou t'entraîner."
+  },
+  {
+    "id": "lang",
+    "character": "Duo",
+    "avatar": "duo.png",
+    "text": "Sélectionne ta langue préférée en haut à droite."
+  }
+]

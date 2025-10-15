@@ -1,0 +1,32 @@
+[
+  {
+    "id": "start",
+    "character": "Alice",
+    "avatar": "alice.png",
+    "text": "Salut ! Prêt pour l’aventure ?",
+    "choices": [
+      { "text": "Oui, allons-y !", "next": "go" },
+      { "text": "Non, pas maintenant.", "next": "end" }
+    ]
+  },
+  {
+    "id": "go",
+    "character": "Bob",
+    "avatar": "bob.png",
+    "text": "Super, on t’attendait !",
+    "next": "mee6-welcome"
+  },
+  {
+    "id": "mee6-welcome",
+    "character": "MEE6",
+    "avatar": "mee6.png",
+    "text": "Bienvenue sur le serveur ! Je suis MEE6, le bot qui va t'aider à progresser.",
+    "next": "end"
+  },
+  {
+    "id": "end",
+    "character": "Alice",
+    "avatar": "alice.png",
+    "text": "À bientôt !"
+  }
+]

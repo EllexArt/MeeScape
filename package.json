@@ -1,18 +1,58 @@
 {
   "name": "meescape",
+  "productName": "meescape",
   "version": "1.0.0",
-  "description": "A visual novel application, with react and electron",
-  "main": "main.ts",
+  "description": "My Electron application description",
+  "main": ".webpack/main",
   "scripts": {
-    "start": "electron .",
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run clean && electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "eslint --ext .ts,.tsx .",
+    "clean": "rimraf .webpack"
   },
-  "author": "ellexart",
+  "keywords": [],
+  "author": {
+    "name": "ellexart",
+    "email": "axelle.mazuy@gmail.com"
+  },
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^24.5.2",
-    "electron": "^38.1.2",
+    "@electron-forge/cli": "^7.10.2",
+    "@electron-forge/maker-deb": "^7.10.2",
+    "@electron-forge/maker-rpm": "^7.10.2",
+    "@electron-forge/maker-squirrel": "^7.10.2",
+    "@electron-forge/maker-zip": "^7.10.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.10.0",
+    "@electron-forge/plugin-fuses": "^7.10.0",
+    "@electron-forge/plugin-webpack": "^6.0.0",
+    "@electron-forge/shared-types": "^7.10.2",
+    "@electron/fuses": "^1.8.0",
+    "@types/node": "^20.4.2",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
+    "@typescript-eslint/parser": "^6.2.1",
+    "@vercel/webpack-asset-relocator-loader": "^1.7.3",
+    "css-loader": "^3.6.0",
+    "electron": "^25.3.1",
+    "eslint": "^8.48.0",
+    "eslint-plugin-import": "^2.32.0",
+    "fork-ts-checker-webpack-plugin": "^9.1.0",
+    "node-loader": "^2.1.0",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.5.4",
+    "ts-node": "^10.9.1",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.4",
+    "@mui/material": "^7.3.4",
+    "electron-squirrel-startup": "^1.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rimraf": "^6.0.1"
   }
 }
