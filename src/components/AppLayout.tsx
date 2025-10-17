@@ -1,13 +1,11 @@
 import React from 'react';
-import { Box } from '@mui/material';
-
 import ServerList from './server-list';
-import ChannelList from './sidebar/ChannelList';
 import MemberList from './member-list';
 import ProfileBar from './profile-bar';
-import ChannelHeader from './sidebar/ChannelHeader';
-import LanguageSelector from './language/LanguageSelector';
 import ChatWindow from './chat-window';
+import ChannelList from './channel-list';
+import LanguageSelector from './language/LanguageSelector';
+import ChannelHeader from './sidebar/ChannelHeader';
 
 export type Profile = {
   name: string;
@@ -35,7 +33,6 @@ export interface AppLayoutProps {
   onQuit: () => void;
   onReset?: () => void;
   goHome?: () => void;
-  onSave?: () => void;
   onShowSaves?: () => void;
 }
 
@@ -51,58 +48,34 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   onQuit,
   onReset,
   goHome,
-  onSave,
   onShowSaves,
 }) => (
-  <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-    {/* Sidebar gauche (serveurs) */}
-    <Box sx={{ width: 60, borderRight: 1, borderColor: 'divider' }}>
-      <ServerList
-        onQuit={onQuit}
-        onReset={onReset}
-        goHome={goHome}
-        onSave={onSave}
-        onShowSaves={onShowSaves}
-      />
-    </Box>
+  <div className="discord-layout">
+    {/* Liste des serveurs (gauche) */}
+    <ServerList
+      onQuit={onQuit}
+      onReset={onReset}
+      goHome={goHome}
+      onShowSaves={onShowSaves}
+    />
 
-    {/* Sidebar centrale (salons + profil) */}
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: 280,
-        borderRight: 1,
-        borderColor: 'divider',
-        bgcolor: 'background.paper',
-      }}
-    >
+    {/* Sidebar avec salons + profil */}
+    <div className="sidebar-left">
       <ChannelList />
       <ProfileBar profile={profile} setProfile={setProfile} />
-    </Box>
+    </div>
 
     {/* Zone principale de chat */}
-    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
+    <div className="main-chat-area">
       <ChannelHeader channelName={currentChannel.name}>
         <LanguageSelector lang={lang} setLang={setLang} />
       </ChannelHeader>
-      <Box sx={{ flex: 1, overflowY: 'auto' }}>
-        <ChatWindow messages={messages} choices={choices} onChoice={onChoice} />
-      </Box>
-    </Box>
+      <ChatWindow messages={messages} choices={choices} onChoice={onChoice} />
+    </div>
 
-    {/* Sidebar droite (membres) */}
-    <Box
-      sx={{
-        width: 200,
-        borderLeft: 1,
-        borderColor: 'divider',
-        bgcolor: 'background.paper',
-      }}
-    >
-      <MemberList />
-    </Box>
-  </Box>
+    {/* Liste des membres (droite) */}
+    <MemberList />
+  </div>
 );
 
 export default AppLayout;

@@ -21,21 +21,13 @@ const avatarMap: Record<string, string> = {
   'user.png': userImg,
 };
 
-const fallback = avatarMap['user.png'];
-
 const CharacterAvatar: React.FC<CharacterAvatarProps> = ({ avatar, name, size = 40 }) => {
-  const src = avatarMap[avatar] || fallback;
 
   return (
     <Avatar
-      src={src}
+      src={avatarMap[avatar]}
       alt={name}
       sx={{ width: size, height: size }}
-      imgProps={{
-        onError: (e) => {
-          (e.currentTarget as HTMLImageElement).src = fallback;
-        },
-      }}
     />
   );
 };

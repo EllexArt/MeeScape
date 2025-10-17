@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, IconButton, Tooltip, Avatar } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
-import SaveIcon from '@mui/icons-material/Save';
 import StorageIcon from '@mui/icons-material/Storage';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import { RestartAlt } from '@mui/icons-material';
 
 type Server = {
   id: string;
@@ -19,7 +19,6 @@ type ServerListProps = {
   onQuit?: () => void;
   onReset?: () => void;
   goHome?: () => void;
-  onSave?: () => void;
   onShowSaves?: () => void;
 };
 
@@ -27,23 +26,22 @@ const ServerList: React.FC<ServerListProps> = ({
   onQuit,
   onReset,
   goHome,
-  onSave,
   onShowSaves
 }) => {
   return (
     <Box
+      className="server-list"
       sx={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         width: 72,
-        bgcolor: 'background.paper',
         p: 1,
         gap: 1,
       }}
     >
       {/* Liste des serveurs */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <Box  className={'server-icon'} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         {servers.map((server) => (
           <Tooltip key={server.id} title={server.name} placement="right">
             <Avatar sx={{ bgcolor: 'primary.main' }}>{server.icon}</Avatar>
@@ -51,32 +49,42 @@ const ServerList: React.FC<ServerListProps> = ({
         ))}
       </Box>
 
+      {/* Séparateur */}
+      <Box
+       sx={{ 
+        width: '32px', 
+        height: '2px', 
+        background: '#232428', 
+        borderRadius: '1px',
+        margin: '4px 0'
+      }}></Box>
+
       {/* Actions */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
+      <Box className="server-actions" sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
         {goHome && (
           <Tooltip title="Accueil" placement="right">
-            <IconButton color="primary" onClick={goHome}>
+            <IconButton className="server-action-btn" color="primary" onClick={goHome}>
               <HomeIcon />
             </IconButton>
           </Tooltip>
         )}
         {onShowSaves && (
           <Tooltip title="Sauvegardes" placement="right">
-            <IconButton color="primary" onClick={onShowSaves}>
+            <IconButton className="server-action-btn"  color="primary" onClick={onShowSaves}>
               <StorageIcon />
             </IconButton>
           </Tooltip>
         )}
-        {onSave && (
-          <Tooltip title="Sauvegarder" placement="right">
-            <IconButton color="primary" onClick={onSave}>
-              <SaveIcon />
+        {onReset && (
+          <Tooltip title="Réinitialiser" placement="right">
+            <IconButton className="server-action-btn" color="warning" onClick={onReset}>
+              <RestartAlt />
             </IconButton>
           </Tooltip>
         )}
         {onQuit && (
           <Tooltip title="Quitter" placement="right">
-            <IconButton color="error" onClick={onQuit}>
+            <IconButton className="server-action-btn" color="error" onClick={onQuit}>
               <PowerSettingsNewIcon />
             </IconButton>
           </Tooltip>

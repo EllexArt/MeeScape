@@ -3,7 +3,7 @@ import { rules } from './webpack.rules';
 import { plugins } from './webpack.plugins';
 
 export const mainConfig: Configuration = {
-  entry: './src/renderer.tsx',
+  entry: './src/index.ts',
   module: {
     rules,
   },
@@ -11,4 +11,5 @@ export const mainConfig: Configuration = {
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
   },
+  target: 'electron-main',
 };

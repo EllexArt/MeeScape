@@ -16,7 +16,10 @@ rules.push({
 
 export const rendererConfig: Configuration = {
   target: 'web', // ← Très important : renderer process = environnement navigateur
-  entry: './src/renderer.tsx',
+  entry: {
+    renderer: './src/renderer.tsx',
+    preload: './src/preload.ts',
+  },
   output: {
     path: path.resolve(__dirname, '.webpack/renderer'),
     filename: 'renderer.js',

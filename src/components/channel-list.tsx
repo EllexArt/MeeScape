@@ -1,31 +1,15 @@
 import React from 'react';
 import { Box, Typography, List, ListItemButton, ListItemIcon, ListItemText, Divider } from '@mui/material';
-import Image from '../assets/banner.png'; // Assure-toi que ton loader webpack gère les images
+import Image from '../assets/banners/banner.jpg'; // Assure-toi que ton loader webpack gère les images
+import { useChannel } from '../logic/useChannel';
 
-type Channel = {
-  id: string;
-  name: string;
-  type: 'text' | 'voice';
-  icon: string;
-};
-
-const channels: Channel[] = [
-  { id: '1', name: 'annonce', type: 'text', icon: '❗' },
-  { id: '2', name: 'général-bazar', type: 'text', icon: '📢' },
-  { id: '3', name: 'général-apprentissage', type: 'text', icon: '📚' },
-  { id: '4', name: 'réactions-duo', type: 'text', icon: '🌸' },
-  { id: '5', name: 'multimédia', type: 'text', icon: '🎬' },
-  { id: '6', name: 'help-discord', type: 'text', icon: '🆘' },
-  { id: '7', name: 'Vocal 1', type: 'voice', icon: '🔊' },
-  { id: '8', name: 'Vocal 2', type: 'voice', icon: '🔊' },
-];
-
-const ChannelList: React.FC = () => (
+const ChannelList: React.FC = () => {
+  const { channels } = useChannel();
+  return (
   <Box
     component="aside"
     sx={{
       width: 250,
-      bgcolor: 'background.paper',
       display: 'flex',
       flexDirection: 'column',
       borderRight: '1px solid',
@@ -38,7 +22,7 @@ const ChannelList: React.FC = () => (
         variant="h6"
         sx={{ position: 'absolute', bottom: 8, left: 8, color: 'white', fontWeight: 'bold' }}
       >
-        Tiboudouboudou
+        Duolang Server
       </Typography>
     </Box>
 
@@ -70,6 +54,7 @@ const ChannelList: React.FC = () => (
       ))}
     </List>
   </Box>
-);
+  )
+};
 
 export default ChannelList;

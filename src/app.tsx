@@ -6,47 +6,57 @@ import { useDialogue } from './logic/useDialogue';
 import { useLanguage } from './logic/useLanguage';
 import { useProfile } from './logic/useProfile';
 import { useChannel } from './logic/useChannel';
-import { SavesManager, saveCurrent } from './components/saves-manager';
+import { SavesManager } from './components/saves-manager';
 
 const App = () => {
   const [showHome, setShowHome] = useState(true);
   const [showSaves, setShowSaves] = useState(false);
-  const [showSavePopup, setShowSavePopup] = useState(false);
-  const [saveName, setSaveName] = useState('');
+  
   const { lang, setLang } = useLanguage('fr');
   const { profile, setProfile } = useProfile();
-  const { currentChannel } = useChannel();
+  const { currentChannel, setCurrentChannel, channels } = useChannel();
   const { messages, choices, onChoice, resetDialogue } = useDialogue('start');
 
   // Quitter l'application (Electron)
   const handleQuit = () => {
-    window.close();
+    if (confirm('Êtes-vous sûr de vouloir quitter ?')) {
+      window.close();
+    }
   };
 
-  // Sauvegarder l'état actuel
-  const handleSave = () => {
-    setShowSavePopup(true);
-  };
-  const confirmSave = () => {
-    saveCurrent(saveName || 'Sauvegarde', {
-      profile,
-      lang,
-      currentChannel,
-      messages
-    });
-    setShowSavePopup(false);
-    setShowSaves(true);
-    setSaveName('');
-  };
+  // Obtenir l'état actuel du jeu pour la sauvegarde
+  const getCurrentGameState = () => ({
+    profile,
+    lang,
+    currentChannel,
+    messages,
+    timestamp: new Date().toISOString()
+  });
 
   // Charger une sauvegarde
-  const handleLoad = (data: any) => {
-    // TODO: appliquer la sauvegarde (profile, lang, channel, messages)
-    window.location.reload(); // Pour l'instant, recharger l'app
+  const handleLoadSave = (data: any) => {
+    if (data.profile) setProfile(data.profile);
+    if (data.lang) setLang(data.lang);
+    if (data.currentChannel) setCurrentChannel(data.currentChannel);
+    // Pour les messages, il faudrait une fonction dans useDialogue
+    // Pour l'instant, on recharge juste l'app
+    setShowSaves(false);
+    setShowHome(false);
+  };
+
+  // Commencer une nouvelle partie
+  const handleStart = () => {
+    resetDialogue();
+    setShowHome(false);
   };
 
   if (showHome) {
-    return <HomePage onStart={() => setShowHome(false)} />;
+    return (
+      <HomePage 
+        onStart={handleStart} 
+        onLoadSave={handleLoadSave}
+      />
+    );
   }
 
   return (
@@ -63,27 +73,16 @@ const App = () => {
         onQuit={handleQuit}
         onReset={resetDialogue}
         goHome={() => setShowHome(true)}
-        onSave={handleSave}
         onShowSaves={() => setShowSaves(true)}
       />
-      {showSaves && <SavesManager onLoad={handleLoad} onClose={() => setShowSaves(false)} />}
-      {showSavePopup && (
-        <div className="profile-popup">
-          <div className="profile-popup-content">
-            <div className="profile-popup-title">Nom de la sauvegarde</div>
-            <input
-              className="profile-edit-name"
-              value={saveName}
-              onChange={e => setSaveName(e.target.value)}
-              maxLength={30}
-              autoFocus
-            />
-            <div className="profile-popup-actions">
-              <button className="profile-popup-btn" onClick={confirmSave}>Valider</button>
-              <button className="profile-popup-btn cancel" onClick={() => setShowSavePopup(false)}>Annuler</button>
-            </div>
-          </div>
-        </div>
+      
+      {/* Saves Manager Modal */}
+      {showSaves && (
+        <SavesManager
+          currentGameState={getCurrentGameState()}
+          onLoad={handleLoadSave}
+          onClose={() => setShowSaves(false)}
+        />
       )}
     </>
   );

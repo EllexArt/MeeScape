@@ -1,6 +1,11 @@
 import React from 'react';
-import { Box, Avatar, Typography, Paper, Stack, Chip } from '@mui/material';
-import CharacterAvatar from './character-avatar';
+
+// Import des avatars
+import aliceImg from '../assets/avatars/alice.png';
+import bobImg from '../assets/avatars/bob.png';
+import charlieImg from '../assets/avatars/charlie.png';
+import mee6Img from '../assets/avatars/mee6.jpg';
+import userImg from '../assets/avatars/user.png';
 
 export type Message = {
   avatar: string;
@@ -15,8 +20,18 @@ type MessageListProps = {
   messages: Message[];
 };
 
+const avatarMap: Record<string, string> = {
+  'alice.png': aliceImg,
+  'bob.png': bobImg,
+  'charlie.png': charlieImg,
+  'mee6.jpg': mee6Img,
+  'user.png': userImg,
+};
+
+const fallback = userImg;
+
 const MessageList: React.FC<MessageListProps> = ({ messages }) => {
-  // Grouper les messages par personnage
+  // Grouper les messages par personnage consécutifs
   const grouped: {
     character: string;
     role?: string;
@@ -31,65 +46,66 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
     } else {
       let avatar = msg.avatar;
       if (msg.character === 'MEE6') avatar = 'mee6.jpg';
-      grouped.push({ character: msg.character, role: msg.role, avatar, items: [msg] });
+      grouped.push({ 
+        character: msg.character, 
+        role: msg.role, 
+        avatar, 
+        items: [msg] 
+      });
     }
   });
 
   return (
-    <Stack spacing={2}>
-      {grouped.map((group, gidx) => {
-        const isUser = group.character === 'Vous';
-        return (
-          <Stack key={gidx} spacing={1}>
-            {group.items.map((msg, idx) => (
-              <Box
-                key={idx}
-                display="flex"
-                flexDirection={isUser ? 'row-reverse' : 'row'}
-                alignItems="flex-start"
-                gap={1}
-              >
-                <CharacterAvatar avatar={msg.avatar} name={msg.character} />
+    <div className="message-list">
+      {grouped.map((group, gidx) => (
+        <div key={gidx} className="message-group">
+          {group.items.map((msg, idx) => {
+            const avatarSrc = avatarMap[group.avatar] || fallback;
+            const isFirstInGroup = idx === 0;
 
-                <Box flex={1}>
-                  <Box display="flex" justifyContent={isUser ? 'flex-end' : 'flex-start'} gap={1} alignItems="center">
-                    <Typography variant="subtitle2" color="text.primary">
-                      {msg.character}
-                    </Typography>
-                    {msg.role === 'BOT' && <Chip label="BOT" size="small" color="warning" />}
-                    <Typography variant="caption" color="text.secondary">
-                      {msg.time || '20:00'}
-                    </Typography>
-                  </Box>
-
-                  <Paper
-                    elevation={1}
-                    sx={{
-                      p: 1,
-                      mt: 0.5,
-                      backgroundColor: isUser ? 'primary.light' : 'grey.100',
-                      color: isUser ? 'common.white' : 'text.primary',
-                      borderRadius: 2,
-                      maxWidth: '80%',
-                      alignSelf: isUser ? 'flex-end' : 'flex-start',
-                    }}
-                  >
-                    <Typography variant="body2">{msg.text}</Typography>
-                    {msg.reactions && msg.reactions.length > 0 && (
-                      <Stack direction="row" spacing={0.5} mt={0.5} flexWrap="wrap">
-                        {msg.reactions.map((r, i) => (
-                          <Chip key={i} size="small" label={`${r.emoji} ${r.count}`} />
-                        ))}
-                      </Stack>
-                    )}
-                  </Paper>
-                </Box>
-              </Box>
-            ))}
-          </Stack>
-        );
-      })}
-    </Stack>
+            return (
+              <div key={idx} className="message">
+                <img
+                  src={avatarSrc}
+                  alt={msg.character}
+                  className="message-avatar"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = fallback;
+                  }}
+                />
+                
+                <div className="message-content">
+                  {isFirstInGroup && (
+                    <div className="message-header">
+                      <span className="message-author">{msg.character}</span>
+                      {msg.role === 'BOT' && (
+                        <span className="message-role">BOT</span>
+                      )}
+                      <span className="message-timestamp">
+                        {msg.time || '20:00'}
+                      </span>
+                    </div>
+                  )}
+                  
+                  <div className="message-text">{msg.text}</div>
+                  
+                  {msg.reactions && msg.reactions.length > 0 && (
+                    <div className="message-reactions">
+                      {msg.reactions.map((r, i) => (
+                        <span key={i} className="message-reaction">
+                          <span>{r.emoji}</span>
+                          <span>{r.count}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
   );
 };
 

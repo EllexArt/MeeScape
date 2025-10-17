@@ -1,61 +1,65 @@
-import React from 'react';
-import { Box, Button, Typography } from '@mui/material';
-import banner from '../assets/banners/banner.jpg';
+import React, { useState } from 'react';
+import bannerImg from '../assets/banners/banner.jpg';
+import { SavesManager } from '../components/saves-manager';
 
-// Props du composant
 interface HomePageProps {
   onStart: () => void;
+  onLoadSave?: (data: any) => void;
 }
 
-// Composant HomePage
-const HomePage: React.FC<HomePageProps> = ({ onStart }) => {
+const HomePage: React.FC<HomePageProps> = ({ onStart, onLoadSave }) => {
+  const [showSaves, setShowSaves] = useState(false);
+
+  const handleLoadSave = (data: any) => {
+    if (onLoadSave) {
+      onLoadSave(data);
+    }
+    setShowSaves(false);
+  };
+
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      minHeight="100vh"
-      textAlign="center"
-      bgcolor="#121212"
-      color="#fff"
-      px={2}
-    >
-      {/* Banner */}
-      <Box
-        component="img"
-        src={banner}
-        alt="MeeScape Banner"
-        sx={{
-          maxWidth: '80%',
-          height: 'auto',
-          borderRadius: 2,
-          mb: 3,
-          boxShadow: 3,
-        }}
-      />
+    <>
+      <div className="home-page">
+        {/* Banner */}
+        <img
+          src={bannerImg}
+          alt="MeeScape Banner"
+          className="home-banner"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+          }}
+        />
 
-      {/* Title */}
-      <Typography variant="h3" component="h1" gutterBottom>
-        MeeScape
-      </Typography>
+        {/* Title */}
+        <h1 className="home-title">MeeScape</h1>
 
-      {/* Description */}
-      <Typography variant="h6" component="p" gutterBottom>
-        Un visual novel multilingue façon Discord
-      </Typography>
+        {/* Description */}
+        <p className="home-desc">
+          Un visual novel multilingue façon Discord
+        </p>
 
-      {/* Start Button */}
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        onClick={onStart}
-        sx={{ mt: 3, px: 4, py: 1.5 }}
-      >
-        Commencer
-      </Button>
-    </Box>
+        {/* Buttons */}
+        <div className="home-buttons">
+          <button className="home-btn" onClick={onStart}>
+            Nouvelle partie
+          </button>
+          <button 
+            className="home-btn secondary" 
+            onClick={() => setShowSaves(true)}
+          >
+            Charger une partie
+          </button>
+        </div>
+      </div>
+
+      {/* Saves Manager Modal */}
+      {showSaves && (
+        <SavesManager 
+          onLoad={handleLoadSave}
+          onClose={() => setShowSaves(false)}
+        />
+      )}
+    </>
   );
 };
 

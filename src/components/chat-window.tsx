@@ -1,8 +1,11 @@
 import React from 'react';
-import { Box, Paper } from '@mui/material';
 import MessageList from './message-list';
-import ChoiceButtons, { Choice } from './choice-buttons';
 import { Message } from '../types/message.type';
+
+export type Choice<T = any> = {
+  text: string;
+  next: T;
+};
 
 interface ChatWindowProps<T = any> {
   messages: Message[];
@@ -11,24 +14,24 @@ interface ChatWindowProps<T = any> {
 }
 
 const ChatWindow = <T,>({ messages, choices, onChoice }: ChatWindowProps<T>) => (
-  <Paper
-    elevation={3}
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      p: 2,
-      height: '100%',
-      maxHeight: '100%',
-      bgcolor: 'background.paper',
-    }}
-  >
-    <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
-      <MessageList messages={messages} />
-    </Box>
-    {choices && onChoice && (
-      <ChoiceButtons<T> choices={choices} onChoice={onChoice} />
+  <div className="chat-window">
+    {/* Zone scrollable des messages */}
+    <MessageList messages={messages} />
+    
+    {/* Zone fixe des choix en bas */}
+    {choices && choices.length > 0 && onChoice && (
+      <div className="choices">
+        {choices.map((choice, idx) => (
+          <button
+            key={idx}
+            onClick={() => onChoice(choice.next)}
+          >
+            {choice.text}
+          </button>
+        ))}
+      </div>
     )}
-  </Paper>
+  </div>
 );
 
 export default ChatWindow;

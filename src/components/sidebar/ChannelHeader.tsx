@@ -7,7 +7,7 @@ type ChannelHeaderProps = {
 
 const ChannelHeader: React.FC<ChannelHeaderProps> = ({ channelName, children }) => (
   <div className="channel-header">
-    <span className="channel-title">#{channelName}</span>
+    <div className="channel-title">{channelName}</div>
     {children}
   </div>
 );

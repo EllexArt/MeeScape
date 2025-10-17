@@ -1,3 +1,4 @@
+import { Avatar, Box, Button, Input, TextField } from '@mui/material';
 import React, { useState } from 'react';
 
 const avatars = [
@@ -41,40 +42,42 @@ const ProfileBar: React.FC<ProfileBarProps> = ({ profile, setProfile }) => {
   };
 
   return (
-    <div className="profile-bar">
-      <img
-        src={avatarSrc}
-        alt={profile.name}
-        className="profile-avatar"
-        onError={() => setAvatarSrc(fallback)}
-      />
-      <div className="profile-info">
-        <div className="profile-name">{profile.name}</div>
-        <div className="profile-role">{profile.role}</div>
-      </div>
-      <div className="profile-status online" title="En ligne"></div>
-      <div className="profile-actions">
-        <button title="Modifier le profil" className="profile-btn" onClick={() => setShowPopup(true)}>⚙️</button>
-      </div>
+    <Box className="profile-bar">
+      <Box sx={{ position: 'relative' }}>
+        <Avatar
+          src={avatarSrc}
+          alt={profile.name}
+          className="profile-avatar"
+          onError={() => setAvatarSrc(fallback)}
+        />
+        <Box className="profile-status online" title="En ligne"></Box>
+      </Box>
+      <Box className="profile-info">
+        <Box className="profile-name">{profile.name}</Box>
+        <Box className="profile-role">{profile.role}</Box>
+      </Box>
+
+      <Box className="profile-actions">
+        <Button title="Modifier le profil" className="profile-btn" onClick={() => setShowPopup(true)}>⚙️</Button>
+      </Box>
       {showPopup && (
-        <div className="profile-popup">
-          <div className="profile-popup-content">
-            <div className="profile-popup-title">Modifier le nom</div>
-            <input
+        <Box className="profile-popup">
+          <Box className="profile-popup-content">
+            <Box className="profile-popup-title">Modifier le nom</Box>
+            <TextField
               className="profile-edit-name"
               value={name}
               onChange={e => setName(e.target.value)}
-              maxLength={20}
               autoFocus
             />
-            <div className="profile-popup-actions">
-              <button className="profile-popup-btn" onClick={save}>Valider</button>
-              <button className="profile-popup-btn cancel" onClick={cancel}>Annuler</button>
-            </div>
-          </div>
-        </div>
+            <Box className="profile-popup-actions">
+              <Button className="profile-popup-btn" onClick={save}>Valider</Button>
+              <Button className="profile-popup-btn cancel" onClick={cancel}>Annuler</Button>
+            </Box>
+          </Box>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 
