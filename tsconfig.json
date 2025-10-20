@@ -1,24 +1,20 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "jsx": "react-jsx",
-    "strict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
+    "target": "ES6",
     "allowJs": true,
+    "module": "commonjs",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "outDir": "dist"
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "*": ["node_modules/*"]
+    }
   },
-  "include": [
-    "src/**/*",
-    "webpack.*.ts",
-    "forge.config.ts",
-    "global.d.ts"
-  ],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*"]
 }

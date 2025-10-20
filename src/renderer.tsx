@@ -1,37 +1,33 @@
-/**
- * This file will automatically be loaded by webpack and run in the "renderer" context.
- * To learn more about the differences between the "main" and the "renderer" context in
- * Electron, visit:
- *
- * https://electronjs.org/docs/latest/tutorial/process-model
- *
- * By default, Node.js integration in this file is disabled. When enabling Node.js integration
- * in a renderer process, please be aware of potential security implications. You can read
- * more about security risks here:
- *
- * https://electronjs.org/docs/tutorial/security
- *
- * To enable Node.js integration in this file, open up `main.js` and enable the `nodeIntegration`
- * flag:
- *
- * ```
- *  // Create the browser window.
- *  mainWindow = new BrowserWindow({
- *    width: 800,
- *    height: 600,
- *    webPreferences: {
- *      nodeIntegration: true
- *    }
- *  });
- * ```
- */
 import './styles/index.css';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './app';
 
+console.log('🔧 Renderer script starting...');
+console.log('🔧 React version:', React.version);
+
 const rootElement = document.getElementById('root');
-if (rootElement) {
-  const root = createRoot(rootElement);
-  root.render(<App />);
+
+if (!rootElement) {
+  console.error('❌ Root element not found!');
+  document.body.innerHTML = '<h1 style="color: red; padding: 50px;">ERROR: Root element not found!</h1>';
+} else {
+  console.log('✅ Root element found');
+  try {
+    const root = createRoot(rootElement);
+    console.log('✅ Root created, rendering App...');
+    root.render(<App />);
+    console.log('✅ App rendered!');
+  } catch (error) {
+    console.error('❌ Error rendering:', error);
+    document.body.innerHTML = `<h1 style="color: red; padding: 50px;">ERROR: ${error}</h1>`;
+  }
 }
+
+// Test global
+(window as any).testReact = () => {
+  console.log('React is available:', typeof React !== 'undefined');
+  console.log('Root element:', document.getElementById('root'));
+};
+
+console.log('🔧 Run window.testReact() to test');

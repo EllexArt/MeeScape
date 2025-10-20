@@ -1,29 +1,33 @@
-import * as path from 'path';
 import type { Configuration } from 'webpack';
-
-import { rules } from './webpack.rules';
 import { plugins } from './webpack.plugins';
+import { rendererRules } from './webpack.rules.renderer';
 
+const rules = [...rendererRules];
+// CSS
 rules.push({
-  test: /\.(png|jpe?g|gif|svg)$/i,
-  type: 'asset/resource',
+  test: /\.css$/,
+  use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
 });
 
+// Images
 rules.push({
-  test: /\.css$/i,
-  use: ['style-loader', 'css-loader'],
+  test: /\.(png|jpe?g|gif|svg|webp|jpg|ico)$/i,
+  type: 'asset/resource',
+  generator: {
+    filename: 'assets/images/[name][ext]',
+  },
+});
+
+// Fonts
+rules.push({
+  test: /\.(woff|woff2|eot|ttf|otf)$/i,
+  type: 'asset/resource',
+  generator: {
+    filename: 'assets/fonts/[name][ext]',
+  },
 });
 
 export const rendererConfig: Configuration = {
-  target: 'web', // ← Très important : renderer process = environnement navigateur
-  entry: {
-    renderer: './src/renderer.tsx',
-    preload: './src/preload.ts',
-  },
-  output: {
-    path: path.resolve(__dirname, '.webpack/renderer'),
-    filename: 'renderer.js',
-  },
   module: {
     rules,
   },
@@ -31,12 +35,7 @@ export const rendererConfig: Configuration = {
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
   },
-  devServer: {
-    static: {
-      directory: path.join(__dirname, 'public'),
-    },
-    port: 3000,
-    hot: true,
-    historyApiFallback: true,
-  },
+  target: 'web',
+  mode: 'development',
+  devtool: 'source-map',
 };
