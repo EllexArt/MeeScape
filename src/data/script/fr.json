@@ -1,24 +1,32 @@
 [
   {
     "id": "start",
-    "character": "Duo",
-    "avatar": "duo.png",
-    "text": "Bienvenue sur le serveur d'apprentissage des langues ! Prêt à progresser ?",
+    "character": "Alice",
+    "avatar": "alice.png",
+    "text": "Salut ! Prêt pour l'aventure ?",
     "choices": [
-      { "text": "Oui, commençons !", "next": "go" },
-      { "text": "Je veux changer de langue.", "next": "lang" }
+      { "text": "Oui, allons-y !", "next": "go" },
+      { "text": "Non, pas maintenant.", "next": "end" }
     ]
   },
   {
     "id": "go",
-    "character": "Duo",
-    "avatar": "duo.png",
-    "text": "Super ! Choisis un salon pour discuter ou t'entraîner."
+    "character": "Bob",
+    "avatar": "bob.png",
+    "text": "Super, on t'attendait !",
+    "next": "mee6-welcome"
   },
   {
-    "id": "lang",
-    "character": "Duo",
-    "avatar": "duo.png",
-    "text": "Sélectionne ta langue préférée en haut à droite."
+    "id": "mee6-welcome",
+    "character": "MEE6",
+    "avatar": "mee6.jpg",
+    "text": "Bienvenue sur le serveur ! Je suis MEE6, le bot qui va t'aider à progresser.",
+    "next": "end"
+  },
+  {
+    "id": "end",
+    "character": "Alice",
+    "avatar": "alice.png",
+    "text": "À bientôt !"
   }
 ]

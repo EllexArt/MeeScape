@@ -1,17 +1,23 @@
-import { Avatar, Box, Button, Input, TextField } from '@mui/material';
 import React, { useState } from 'react';
+import { Box, Avatar, Typography, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
+import aliceImg from '../assets/avatars/alice.png';
+import bobImg from '../assets/avatars/bob.jpg';
+import charlieImg from '../assets/avatars/charlie.jpg';
+import userImg from '../assets/avatars/user.jpg';
 
 const avatars = [
-  'user.png', 'alice.png', 'bob.png', 'charlie.png'
+  'user.jpg', 'alice.png', 'bob.jpg', 'charlie.jpg'
 ];
 
 const avatarMap: Record<string, string> = {
-  'alice.png': require('../assets/avatars/alice.png').default,
-  'bob.png': require('../assets/avatars/bob.png').default,
-  'charlie.png': require('../assets/avatars/charlie.png').default,
-  'user.png': require('../assets/avatars/user.png').default,
+  'alice.png': aliceImg,
+  'bob.jpg': bobImg,
+  'charlie.jpg': charlieImg,
+  'user.jpg': userImg,
 };
-const fallback = avatarMap['user.png'];
+
+const fallback = userImg;
 
 type Profile = {
   name: string;
@@ -27,15 +33,15 @@ type ProfileBarProps = {
 };
 
 const ProfileBar: React.FC<ProfileBarProps> = ({ profile, setProfile }) => {
-  const [editing, setEditing] = useState(false);
   const [name, setName] = useState(profile.name);
   const [showPopup, setShowPopup] = useState(false);
-  const [avatarSrc, setAvatarSrc] = useState(avatarMap[profile.avatar] || fallback);
+  const avatarSrc = avatarMap[profile.avatar] || fallback;
 
   const save = () => {
     setProfile({ ...profile, name });
     setShowPopup(false);
   };
+  
   const cancel = () => {
     setName(profile.name);
     setShowPopup(false);
@@ -48,35 +54,62 @@ const ProfileBar: React.FC<ProfileBarProps> = ({ profile, setProfile }) => {
           src={avatarSrc}
           alt={profile.name}
           className="profile-avatar"
-          onError={() => setAvatarSrc(fallback)}
+          imgProps={{
+            onError: (e: any) => {
+              e.currentTarget.src = fallback;
+            }
+          }}
         />
-        <Box className="profile-status online" title="En ligne"></Box>
+        <Box className="profile-status online" title="En ligne" />
       </Box>
+      
       <Box className="profile-info">
-        <Box className="profile-name">{profile.name}</Box>
-        <Box className="profile-role">{profile.role}</Box>
+        <Typography className="profile-name">{profile.name}</Typography>
+        <Typography className="profile-role">{profile.role}</Typography>
       </Box>
 
       <Box className="profile-actions">
-        <Button title="Modifier le profil" className="profile-btn" onClick={() => setShowPopup(true)}>⚙️</Button>
+        <IconButton 
+          title="Modifier le profil" 
+          className="profile-btn" 
+          onClick={() => setShowPopup(true)}
+          size="small"
+        >
+          <SettingsIcon />
+        </IconButton>
       </Box>
-      {showPopup && (
-        <Box className="profile-popup">
-          <Box className="profile-popup-content">
-            <Box className="profile-popup-title">Modifier le nom</Box>
-            <TextField
-              className="profile-edit-name"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              autoFocus
-            />
-            <Box className="profile-popup-actions">
-              <Button className="profile-popup-btn" onClick={save}>Valider</Button>
-              <Button className="profile-popup-btn cancel" onClick={cancel}>Annuler</Button>
-            </Box>
-          </Box>
-        </Box>
-      )}
+      
+      {/* Dialog MUI au lieu du popup custom */}
+      <Dialog 
+        open={showPopup} 
+        onClose={cancel}
+        PaperProps={{
+          className: 'profile-popup-content'
+        }}
+      >
+        <DialogTitle className="profile-popup-title">
+          Modifier le nom
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            fullWidth
+            value={name}
+            onChange={e => setName(e.target.value)}
+            inputProps={{ maxLength: 20 }}
+            className="profile-edit-name"
+            sx={{ mt: 1 }}
+          />
+        </DialogContent>
+        <DialogActions className="profile-popup-actions">
+          <Button onClick={save} variant="contained" className="profile-popup-btn">
+            Valider
+          </Button>
+          <Button onClick={cancel} variant="outlined" className="profile-popup-btn cancel">
+            Annuler
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import bannerImg from '../assets/banners/banner.jpg';
+import { Box, Button, Typography } from '@mui/material';
 import { SavesManager } from '../components/saves-manager';
+import bannerImg from '../assets/banners/banner.jpg';
 
 interface HomePageProps {
   onStart: () => void;
@@ -19,38 +20,50 @@ const HomePage: React.FC<HomePageProps> = ({ onStart, onLoadSave }) => {
 
   return (
     <>
-      <div className="home-page">
+      <Box className="home-page">
         {/* Banner */}
-        <img
+        <Box
+          component="img"
           src={bannerImg}
           alt="MeeScape Banner"
           className="home-banner"
-          onError={(e) => {
+          onError={(e: any) => {
             e.currentTarget.style.display = 'none';
           }}
         />
 
         {/* Title */}
-        <h1 className="home-title">MeeScape</h1>
+        <Typography variant="h2" component="h1" className="home-title">
+          MeeScape
+        </Typography>
 
         {/* Description */}
-        <p className="home-desc">
+        <Typography variant="h6" component="p" className="home-desc">
           Un visual novel multilingue façon Discord
-        </p>
+        </Typography>
 
         {/* Buttons */}
-        <div className="home-buttons">
-          <button className="home-btn" onClick={onStart}>
+        <Box className="home-buttons">
+          <Button 
+            variant="contained" 
+            size="large"
+            className="home-btn" 
+            onClick={onStart}
+            fullWidth
+          >
             Nouvelle partie
-          </button>
-          <button 
+          </Button>
+          <Button 
+            variant="outlined"
+            size="large"
             className="home-btn secondary" 
             onClick={() => setShowSaves(true)}
+            fullWidth
           >
             Charger une partie
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Box>
+      </Box>
 
       {/* Saves Manager Modal */}
       {showSaves && (

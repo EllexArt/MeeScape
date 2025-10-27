@@ -540,8 +540,7 @@ body {
 }
 
 /* BOT Badge */
-.message-role,
-.bubble-role {
+.message-role {
   display: inline-flex;
   align-items: center;
   background: #5865f2;

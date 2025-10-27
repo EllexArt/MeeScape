@@ -1,40 +1,77 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getNodeById } from './dialogueEngine';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { getNodeById, setLanguage, getCurrentLanguage } from './dialogueEngine';
 
 const DIALOGUE_KEY = 'meescape_dialogue';
 
-export function useDialogue(initialId = 'start') {
-  // Chargement initial depuis le localStorage
-  const [currentId, setCurrentId] = useState(() => {
-    const saved = localStorage.getItem(DIALOGUE_KEY);
-    return saved ? JSON.parse(saved).currentId : initialId;
-  });
-  const [messages, setMessages] = useState<any[]>(() => {
-    const saved = localStorage.getItem(DIALOGUE_KEY);
-    return saved ? JSON.parse(saved).messages : [];
-  });
+export function useDialogue(initialId = 'start', lang = 'fr') {
+  const previousLang = useRef(lang);
+  const [currentId, setCurrentId] = useState(initialId);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [initialized, setInitialized] = useState(false);
+
+  // ⚠️ Définir la langue au montage ET quand elle change
+  useEffect(() => {
+    console.log('🌍 Setting language to:', lang);
+    setLanguage(lang);
+    
+    // Si la langue a vraiment changé (pas juste le premier render)
+    if (previousLang.current !== lang && initialized) {
+      console.log('🔄 Language changed from', previousLang.current, 'to', lang, '- reloading dialogue...');
+      setCurrentId(initialId);
+      setMessages([]);
+      setInitialized(false);
+      localStorage.removeItem(DIALOGUE_KEY);
+    }
+    
+    previousLang.current = lang;
+  }, [lang, initialId, initialized]);
+
+  // Récupérer le nœud actuel
   const node = getNodeById(currentId);
 
+  // Initialiser avec le premier message
   useEffect(() => {
-    if (node && (!messages.length || messages[messages.length - 1].id !== node.id)) {
-      setMessages(prev => [
-        ...prev,
-        {
-          ...node,
-          // Add role: 'BOT' for MEE6
-          role: node.character === 'MEE6' ? 'BOT' : undefined
-        }
-      ]);
+    if (!initialized && node) {
+      console.log('✅ Initializing with first node:', node);
+      setMessages([{
+        ...node,
+        role: node.character === 'MEE6' ? 'BOT' : undefined
+      }]);
+      setInitialized(true);
     }
-    // eslint-disable-next-line
-  }, [currentId]);
+  }, [node, initialized]);
 
-  // Sauvegarde automatique à chaque modification
+  // Ajouter un nouveau message quand currentId change (mais pas à l'init)
   useEffect(() => {
-    localStorage.setItem(DIALOGUE_KEY, JSON.stringify({ currentId, messages }));
+    if (initialized && node && currentId !== initialId) {
+      const lastMessage = messages[messages.length - 1];
+      if (!lastMessage || lastMessage.id !== node.id) {
+        console.log('➕ Adding new node:', node);
+        setMessages(prev => [
+          ...prev,
+          {
+            ...node,
+            role: node.character === 'MEE6' ? 'BOT' : undefined
+          }
+        ]);
+      }
+    }
+  }, [currentId, node, initialized, initialId, messages]);
+
+  // Sauvegarder
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem(DIALOGUE_KEY, JSON.stringify({ 
+        currentId, 
+        messages,
+        lang: getCurrentLanguage()
+      }));
+    }
   }, [currentId, messages]);
 
   const makeChoice = useCallback((nextId: string, choiceText?: string) => {
+    console.log('🎯 Choice made:', nextId, choiceText);
+    
     if (choiceText) {
       setMessages(prev => [
         ...prev,
@@ -45,6 +82,7 @@ export function useDialogue(initialId = 'start') {
         },
       ]);
     }
+    
     setCurrentId(nextId);
   }, []);
 
@@ -55,12 +93,22 @@ export function useDialogue(initialId = 'start') {
     };
   }, [node, makeChoice]);
 
-  // Fonction pour réinitialiser la sauvegarde
-  const resetDialogue = () => {
+  const resetDialogue = useCallback(() => {
+    console.log('🔄 Resetting dialogue');
     setCurrentId(initialId);
     setMessages([]);
+    setInitialized(false);
     localStorage.removeItem(DIALOGUE_KEY);
-  };
+  }, [initialId]);
+
+  console.log('📊 Current state:', {
+    currentId,
+    messagesCount: messages.length,
+    hasNode: !!node,
+    choices: node?.choices?.length || 0,
+    initialized,
+    lang
+  });
 
   return {
     messages,

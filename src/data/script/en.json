@@ -1,24 +1,32 @@
 [
   {
     "id": "start",
-    "character": "Duo",
-    "avatar": "duo.png",
-    "text": "Welcome to the language learning server! Ready to make progress?",
+    "character": "Alice",
+    "avatar": "alice.png",
+    "text": "Hi! Ready for the adventure?",
     "choices": [
-      { "text": "Yes, let's start!", "next": "go" },
-      { "text": "I want to change language.", "next": "lang" }
+      { "text": "Yes, let's go!", "next": "go" },
+      { "text": "No, not now.", "next": "end" }
     ]
   },
   {
     "id": "go",
-    "character": "Duo",
-    "avatar": "duo.png",
-    "text": "Great! Choose a channel to chat or practice."
+    "character": "Bob",
+    "avatar": "bob.png",
+    "text": "Great, we were waiting for you!",
+    "next": "mee6-welcome"
   },
   {
-    "id": "lang",
-    "character": "Duo",
-    "avatar": "duo.png",
-    "text": "Select your preferred language at the top right."
+    "id": "mee6-welcome",
+    "character": "MEE6",
+    "avatar": "mee6.jpg",
+    "text": "Welcome to the server! I'm MEE6, the bot that will help you progress.",
+    "next": "end"
+  },
+  {
+    "id": "end",
+    "character": "Alice",
+    "avatar": "alice.png",
+    "text": "See you soon!"
   }
 ]

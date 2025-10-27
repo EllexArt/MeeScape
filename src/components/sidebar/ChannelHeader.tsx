@@ -1,4 +1,6 @@
 import React from 'react';
+import { Box, Typography } from '@mui/material';
+import TagIcon from '@mui/icons-material/Tag';
 
 type ChannelHeaderProps = {
   channelName: string;
@@ -6,10 +8,15 @@ type ChannelHeaderProps = {
 };
 
 const ChannelHeader: React.FC<ChannelHeaderProps> = ({ channelName, children }) => (
-  <div className="channel-header">
-    <div className="channel-title">{channelName}</div>
+  <Box className="channel-header">
+    <Box display="flex" alignItems="center" gap={1}>
+      <TagIcon sx={{ color: '#80848e' }} />
+      <Typography className="channel-title" variant="h6">
+        {channelName}
+      </Typography>
+    </Box>
     {children}
-  </div>
+  </Box>
 );
 
 export default ChannelHeader;

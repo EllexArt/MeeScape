@@ -1,4 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  List,
+  ListItem,
+  Typography,
+  IconButton,
+  Divider,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
 
 const SAVES_KEY = 'meescape_saves';
 
@@ -45,12 +62,10 @@ const SavesManager: React.FC<SavesManagerProps> = ({
   const [saves, setSaves] = useState<SaveData[]>(getSaves());
   const [saveName, setSaveName] = useState('');
 
-  // Refresh saves list
   const refreshSaves = () => {
     setSaves(getSaves());
   };
 
-  // Create new save
   const handleCreateSave = () => {
     if (!saveName.trim()) return;
     
@@ -59,19 +74,16 @@ const SavesManager: React.FC<SavesManagerProps> = ({
       setSaveName('');
       refreshSaves();
     } else if (onSave) {
-      // Fallback to parent's save handler
       onSave();
       onClose();
     }
   };
 
-  // Load save
   const handleLoad = (data: any) => {
     onLoad(data);
     onClose();
   };
 
-  // Delete save
   const handleDelete = (idx: number, e: React.MouseEvent) => {
     e.stopPropagation();
     if (confirm('Êtes-vous sûr de vouloir supprimer cette sauvegarde ?')) {
@@ -80,7 +92,6 @@ const SavesManager: React.FC<SavesManagerProps> = ({
     }
   };
 
-  // Format date
   const formatDate = (isoDate: string) => {
     const date = new Date(isoDate);
     return new Intl.DateTimeFormat('fr-FR', {
@@ -92,7 +103,6 @@ const SavesManager: React.FC<SavesManagerProps> = ({
     }).format(date);
   };
 
-  // Handle escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -102,92 +112,139 @@ const SavesManager: React.FC<SavesManagerProps> = ({
   }, [onClose]);
 
   return (
-    <div className="saves-popup" onClick={onClose}>
-      <div className="saves-popup-content" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div className="saves-popup-header">
-          <h2>Gestion des sauvegardes</h2>
-          <button className="saves-popup-close" onClick={onClose}>
-            ✕
-          </button>
-        </div>
+    <Dialog 
+      open={true} 
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        className: 'saves-popup-content'
+      }}
+    >
+      {/* Header */}
+      <DialogTitle className="saves-popup-header">
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h6">Gestion des sauvegardes</Typography>
+          <IconButton onClick={onClose} size="small" className="saves-popup-close">
+            <CloseIcon />
+          </IconButton>
+        </Box>
+      </DialogTitle>
 
-        {/* Body */}
-        <div className="saves-popup-body">
-          {/* Create new save section */}
-          {currentGameState && (
-            <div className="saves-new-save">
-              <h3>Créer une nouvelle sauvegarde</h3>
-              <div className="saves-input-group">
-                <input
-                  type="text"
-                  className="saves-input"
-                  placeholder="Nom de la sauvegarde..."
-                  value={saveName}
-                  onChange={(e) => setSaveName(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter' && saveName.trim()) {
-                      handleCreateSave();
+      {/* Body */}
+      <DialogContent className="saves-popup-body" dividers>
+        {/* Create new save section */}
+        {currentGameState && (
+          <Box className="saves-new-save" sx={{ mb: 3 }}>
+            <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
+              Créer une nouvelle sauvegarde
+            </Typography>
+            <Box display="flex" gap={1}>
+              <TextField
+                fullWidth
+                size="small"
+                placeholder="Nom de la sauvegarde..."
+                value={saveName}
+                onChange={(e) => setSaveName(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && saveName.trim()) {
+                    handleCreateSave();
+                  }
+                }}
+                inputProps={{ maxLength: 50 }}
+                autoFocus
+                className="saves-input"
+              />
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleCreateSave}
+                disabled={!saveName.trim()}
+                startIcon={<SaveIcon />}
+                className="saves-create-btn"
+              >
+                Sauvegarder
+              </Button>
+            </Box>
+          </Box>
+        )}
+
+        <Divider sx={{ my: 2 }} />
+
+        {/* Saves list */}
+        <Box className="saves-list-section">
+          <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>
+            Sauvegardes ({saves.length})
+          </Typography>
+          
+          {saves.length === 0 ? (
+            <Box className="saves-empty" textAlign="center" py={5}>
+              <Typography variant="h3" sx={{ opacity: 0.5, mb: 2 }}>
+                💾
+              </Typography>
+              <Typography color="text.secondary">
+                Aucune sauvegarde disponible
+              </Typography>
+            </Box>
+          ) : (
+            <List className="saves-list">
+              {saves.map((save, idx) => (
+                <ListItem
+                  key={idx}
+                  className="saves-item"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    mb: 1,
+                    p: 2,
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    borderRadius: 1,
+                    '&:hover': {
+                      bgcolor: 'action.hover',
                     }
                   }}
-                  maxLength={50}
-                  autoFocus
-                />
-                <button
-                  className="saves-create-btn"
-                  onClick={handleCreateSave}
-                  disabled={!saveName.trim()}
                 >
-                  Sauvegarder
-                </button>
-              </div>
-            </div>
+                  <Box flex={1}>
+                    <Typography variant="body1" className="saves-item-name">
+                      {save.name}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary" className="saves-item-date">
+                      {formatDate(save.date)}
+                    </Typography>
+                  </Box>
+                  
+                  <Box display="flex" gap={1} className="saves-item-actions">
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={() => handleLoad(save.data)}
+                    >
+                      Charger
+                    </Button>
+                    <IconButton
+                      size="small"
+                      color="error"
+                      onClick={(e) => handleDelete(idx, e)}
+                      className="delete-btn"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                </ListItem>
+              ))}
+            </List>
           )}
+        </Box>
+      </DialogContent>
 
-          {/* Saves list */}
-          <div className="saves-list-section">
-            <h3>Sauvegardes ({saves.length})</h3>
-            {saves.length === 0 ? (
-              <div className="saves-empty">
-                <div className="saves-empty-icon">💾</div>
-                <div className="saves-empty-text">
-                  Aucune sauvegarde disponible
-                </div>
-              </div>
-            ) : (
-              <ul className="saves-list">
-                {saves.map((save, idx) => (
-                  <li key={idx} className="saves-item">
-                    <div className="saves-item-info">
-                      <div className="saves-item-name">{save.name}</div>
-                      <div className="saves-item-date">
-                        {formatDate(save.date)}
-                      </div>
-                    </div>
-                    <div className="saves-item-actions">
-                      <button onClick={() => handleLoad(save.data)}>
-                        Charger
-                      </button>
-                      <button 
-                        className="delete-btn"
-                        onClick={(e) => handleDelete(idx, e)}
-                      >
-                        Supprimer
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="saves-popup-footer">
-          <button onClick={onClose}>Fermer</button>
-        </div>
-      </div>
-    </div>
+      {/* Footer */}
+      <DialogActions className="saves-popup-footer">
+        <Button onClick={onClose} variant="outlined">
+          Fermer
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

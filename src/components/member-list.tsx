@@ -1,44 +1,63 @@
 import React from 'react';
+import { Box, Typography, Avatar, Chip } from '@mui/material';
+import aliceImg from '../assets/avatars/alice.png';
+import bobImg from '../assets/avatars/bob.jpg';
+import charlieImg from '../assets/avatars/charlie.jpg';
+import mee6Img from '../assets/avatars/mee6.jpg';
+import userImg from '../assets/avatars/user.jpg';
 
 const avatarMap: Record<string, string> = {
-  'alice.png': require('../assets/avatars/alice.png').default,
-  'bob.png': require('../assets/avatars/bob.png').default,
-  'charlie.png': require('../assets/avatars/charlie.png').default,
-  'mee6.jpg': require('../assets/avatars/mee6.jpg').default,
-  'user.png': require('../assets/avatars/user.png').default,
+  'alice.png': aliceImg,
+  'bob.jpg': bobImg,
+  'charlie.jpg': charlieImg,
+  'mee6.jpg': mee6Img,
+  'user.jpg': userImg,
 };
-const fallback = avatarMap['user.png'];
 
-// Add MEE6 bot to the member list
+const fallback = userImg;
+
 const members = [
   { id: 'u1', name: 'Alice', avatar: 'alice.png', status: 'online' },
-  { id: 'u2', name: 'Bob', avatar: 'bob.png', status: 'idle' },
-  { id: 'u3', name: 'Charlie', avatar: 'charlie.png', status: 'dnd' },
-  { id: 'u4', name: 'Vous', avatar: 'user.png', status: 'online' },
+  { id: 'u2', name: 'Bob', avatar: 'bob.jpg', status: 'idle' },
+  { id: 'u3', name: 'Charlie', avatar: 'charlie.jpg', status: 'dnd' },
+  { id: 'u4', name: 'Vous', avatar: 'user.jpg', status: 'online' },
   { id: 'mee6', name: 'MEE6', avatar: 'mee6.jpg', status: 'online', role: 'BOT' },
 ];
 
 const MemberList: React.FC = () => (
-  <aside className="member-list">
-    <div className="member-list-title">Membres en ligne</div>
+  <Box component="aside" className="member-list">
+    <Typography className="member-list-title">Membres en ligne</Typography>
     {members.map(member => {
       const src = avatarMap[member.avatar] || fallback;
       return (
-        <div key={member.id} className={`member ${member.status}`}>
-          <img
+        <Box key={member.id} className={`member ${member.status}`}>
+          <Avatar
             src={src}
             alt={member.name}
-            className="member-avatar"
-            onError={e => (e.currentTarget.src = fallback)}
+            sx={{
+              width: 48,
+              height: 48,
+              objectFit: 'cover',
+              img: { objectFit: 'cover' }
+            }}
           />
-          <span className="member-name">{member.name}</span>
+          <Typography component="span" className="member-name">
+            {member.name}
+          </Typography>
           {member.role === 'BOT' && (
-            <span className="bubble-role" style={{ marginLeft: 8, fontSize: '0.75rem' }}>BOT</span>
+            <Chip
+              label="BOT"
+              size="small"
+              classes={{
+                root: 'bubble-role',
+              }}
+              sx={{ ml: 8, fontSize: '0.75rem', backgroundColor: '#5865f2', color: '#fff' }}
+            />
           )}
-        </div>
+        </Box>
       );
     })}
-  </aside>
+  </Box>
 );
 
 export default MemberList;
