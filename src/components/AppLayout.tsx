@@ -6,6 +6,7 @@ import ChatWindow from './chat-window';
 import ChannelList from './channel-list';
 import LanguageSelector from './language/LanguageSelector';
 import ChannelHeader from './sidebar/ChannelHeader';
+import { Box } from '@mui/material';
 
 export type Profile = {
   name: string;
@@ -50,7 +51,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   goHome,
   onShowSaves,
 }) => (
-  <div className="discord-layout">
+  <Box className="discord-layout">
     {/* Liste des serveurs (gauche) */}
     <ServerList
       onQuit={onQuit}
@@ -60,22 +61,22 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     />
 
     {/* Sidebar avec salons + profil */}
-    <div className="sidebar-left">
+    <Box className="sidebar-left">
       <ChannelList />
       <ProfileBar profile={profile} setProfile={setProfile} />
-    </div>
+    </Box>
 
     {/* Zone principale de chat */}
-    <div className="main-chat-area">
+    <Box className="main-chat-area">
       <ChannelHeader channelName={currentChannel.name}>
         <LanguageSelector lang={lang} setLang={setLang} />
       </ChannelHeader>
       <ChatWindow messages={messages} choices={choices} onChoice={onChoice} />
-    </div>
+    </Box>
 
     {/* Liste des membres (droite) */}
     <MemberList />
-  </div>
+  </Box>
 );
 
 export default AppLayout;

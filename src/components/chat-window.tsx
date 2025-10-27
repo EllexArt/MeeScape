@@ -1,6 +1,7 @@
 import React from 'react';
 import MessageList from './message-list';
 import { Message } from '../types/message.type';
+import { Box } from '@mui/material';
 
 export type Choice<T = any> = {
   text: string;
@@ -14,13 +15,13 @@ interface ChatWindowProps<T = any> {
 }
 
 const ChatWindow = <T,>({ messages, choices, onChoice }: ChatWindowProps<T>) => (
-  <div className="chat-window">
+  <Box className="chat-window">
     {/* Zone scrollable des messages */}
     <MessageList messages={messages} />
     
     {/* Zone fixe des choix en bas */}
     {choices && choices.length > 0 && onChoice && (
-      <div className="choices">
+      <Box className="choices">
         {choices.map((choice, idx) => (
           <button
             key={idx}
@@ -29,9 +30,9 @@ const ChatWindow = <T,>({ messages, choices, onChoice }: ChatWindowProps<T>) => 
             {choice.text}
           </button>
         ))}
-      </div>
+      </Box>
     )}
-  </div>
+  </Box>
 );
 
 export default ChatWindow;
