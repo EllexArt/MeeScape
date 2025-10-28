@@ -4,8 +4,7 @@ import {
   Box,
   Chip,
   Stack,
-  Typography,
-  Paper
+  Typography
 } from '@mui/material';
 
 // Import des avatars
@@ -104,8 +103,9 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
                         flexShrink: 0,
                       }}
                       imgProps={{
-                        onError: (e: any) => {
-                          e.currentTarget.src = fallback;
+                        onError: (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                          const target = e.currentTarget as HTMLImageElement;
+                          target.src = fallback;
                         }
                       }}
                     />
@@ -155,7 +155,9 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
                       variant="body2" 
                       sx={{ 
                         whiteSpace: 'pre-wrap',
-                        color: '#dbdee1' 
+                        color: '#dbdee1',
+                        fontSize: '1rem',
+                        lineHeight: 1.4
                       }}
                     >
                       {msg.text}

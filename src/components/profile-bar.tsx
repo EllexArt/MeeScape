@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { Box, Avatar, Typography, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { profileBarStyles, profileAvatarStyles, profileInfoStyles, profileNameStyles, profileRoleStyles, profileStatusStyles } from '../theme/styles';
 import aliceImg from '../assets/avatars/alice.png';
 import bobImg from '../assets/avatars/bob.jpg';
 import charlieImg from '../assets/avatars/charlie.jpg';
 import userImg from '../assets/avatars/user.jpg';
-
-const avatars = [
-  'user.jpg', 'alice.png', 'bob.jpg', 'charlie.jpg'
-];
 
 const avatarMap: Record<string, string> = {
   'alice.png': aliceImg,
@@ -19,18 +16,18 @@ const avatarMap: Record<string, string> = {
 
 const fallback = userImg;
 
-type Profile = {
+interface Profile {
   name: string;
   avatar: string;
   status: string;
   role: string;
   language: string;
-};
+}
 
-type ProfileBarProps = {
+interface ProfileBarProps {
   profile: Profile;
   setProfile: (profile: Profile) => void;
-};
+}
 
 const ProfileBar: React.FC<ProfileBarProps> = ({ profile, setProfile }) => {
   const [name, setName] = useState(profile.name);
@@ -48,30 +45,29 @@ const ProfileBar: React.FC<ProfileBarProps> = ({ profile, setProfile }) => {
   };
 
   return (
-    <Box className="profile-bar">
+    <Box sx={profileBarStyles}>
       <Box sx={{ position: 'relative' }}>
         <Avatar
           src={avatarSrc}
           alt={profile.name}
-          className="profile-avatar"
+          sx={profileAvatarStyles}
           imgProps={{
-            onError: (e: any) => {
+            onError: (e: React.SyntheticEvent<HTMLImageElement>) => {
               e.currentTarget.src = fallback;
             }
           }}
         />
-        <Box className="profile-status online" title="En ligne" />
+        <Box sx={profileStatusStyles} title="En ligne" />
       </Box>
       
-      <Box className="profile-info">
-        <Typography className="profile-name">{profile.name}</Typography>
-        <Typography className="profile-role">{profile.role}</Typography>
+      <Box sx={profileInfoStyles}>
+        <Typography sx={profileNameStyles}>{profile.name}</Typography>
+        <Typography sx={profileRoleStyles}>{profile.role}</Typography>
       </Box>
 
-      <Box className="profile-actions">
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <IconButton 
           title="Modifier le profil" 
-          className="profile-btn" 
           onClick={() => setShowPopup(true)}
           size="small"
         >
@@ -83,11 +79,8 @@ const ProfileBar: React.FC<ProfileBarProps> = ({ profile, setProfile }) => {
       <Dialog 
         open={showPopup} 
         onClose={cancel}
-        PaperProps={{
-          className: 'profile-popup-content'
-        }}
       >
-        <DialogTitle className="profile-popup-title">
+        <DialogTitle>
           Modifier le nom
         </DialogTitle>
         <DialogContent>
@@ -97,15 +90,14 @@ const ProfileBar: React.FC<ProfileBarProps> = ({ profile, setProfile }) => {
             value={name}
             onChange={e => setName(e.target.value)}
             inputProps={{ maxLength: 20 }}
-            className="profile-edit-name"
             sx={{ mt: 1 }}
           />
         </DialogContent>
-        <DialogActions className="profile-popup-actions">
-          <Button onClick={save} variant="contained" className="profile-popup-btn">
+        <DialogActions>
+          <Button onClick={save} variant="contained">
             Valider
           </Button>
-          <Button onClick={cancel} variant="outlined" className="profile-popup-btn cancel">
+          <Button onClick={cancel} variant="outlined">
             Annuler
           </Button>
         </DialogActions>

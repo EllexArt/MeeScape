@@ -7,6 +7,7 @@ import { useLanguage } from './logic/useLanguage';
 import { useProfile } from './logic/useProfile';
 import { useChannel } from './logic/useChannel';
 import { SavesManager } from './components/saves-manager';
+import { Channel } from './types/channel.type';
 
 const App = () => {
   const [showHome, setShowHome] = useState(true);
@@ -14,7 +15,7 @@ const App = () => {
   
   const { lang, setLang } = useLanguage('fr');
   const { profile, setProfile } = useProfile();
-  const { currentChannel, setCurrentChannel, channels } = useChannel();
+  const { currentChannel, setCurrentChannel } = useChannel();
   const { messages, choices, onChoice, resetDialogue } = useDialogue('start');
 
   // Quitter l'application (Electron)
@@ -34,10 +35,15 @@ const App = () => {
   });
 
   // Charger une sauvegarde
-  const handleLoadSave = (data: any) => {
-    if (data.profile) setProfile(data.profile);
-    if (data.lang) setLang(data.lang);
-    if (data.currentChannel) setCurrentChannel(data.currentChannel);
+  const handleLoadSave = (data: unknown) => {
+    const saveData = data as {
+      profile?: unknown;
+      lang?: string;
+      currentChannel?: Channel;
+    };
+    if (saveData.profile) setProfile(saveData.profile);
+    if (saveData.lang) setLang(saveData.lang);
+    if (saveData.currentChannel) setCurrentChannel(saveData.currentChannel);
     // Pour les messages, il faudrait une fonction dans useDialogue
     // Pour l'instant, on recharge juste l'app
     setShowSaves(false);

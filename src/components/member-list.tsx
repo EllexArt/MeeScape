@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Avatar, Chip } from '@mui/material';
+import { Box, Typography, Chip } from '@mui/material';
 import aliceImg from '../assets/avatars/alice.png';
 import bobImg from '../assets/avatars/bob.jpg';
 import charlieImg from '../assets/avatars/charlie.jpg';
@@ -25,33 +25,122 @@ const members = [
 ];
 
 const MemberList: React.FC = () => (
-  <Box component="aside" className="member-list">
-    <Typography className="member-list-title">Membres en ligne</Typography>
+  <Box
+    component="aside"
+    sx={{
+      width: 260,
+      backgroundColor: '#2b2d31',
+      display: 'flex',
+      flexDirection: 'column',
+      padding: '24px 0 0 0',
+      borderLeft: '1px solid #232428',
+      zIndex: 2,
+      overflowY: 'auto',
+      '&::-webkit-scrollbar': {
+        width: 8,
+      },
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: 'transparent',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: '#1a1b1e',
+        borderRadius: 1,
+      },
+    }}
+  >
+    <Typography
+      sx={{
+        color: '#949ba4',
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
+        margin: '0 0 8px 16px',
+        lineHeight: '16px',
+      }}
+    >
+      Membres en ligne
+    </Typography>
     {members.map(member => {
       const src = avatarMap[member.avatar] || fallback;
       return (
-        <Box key={member.id} className={`member ${member.status}`}>
-          <Avatar
-            src={src}
-            alt={member.name}
+        <Box
+          key={member.id}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            padding: '4px 8px',
+            margin: '1px 8px',
+            borderRadius: 1,
+            transition: 'background 0.15s',
+            cursor: 'pointer',
+            position: 'relative',
+            '&:hover': {
+              backgroundColor: '#35373c',
+            },
+          }}
+        >
+          <Box
             sx={{
-              width: 48,
-              height: 48,
-              objectFit: 'cover',
-              img: { objectFit: 'cover' }
+              position: 'relative',
+              width: 36,
+              height: 36,
+              borderRadius: '50%',
+              backgroundColor: '#5865f2',
+              flexShrink: 0,
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: -2,
+                right: -2,
+                width: 12,
+                height: 12,
+                borderRadius: '50%',
+                border: '2px solid #2b2d31',
+                backgroundColor: member.status === 'online' ? '#23a559' :
+                                member.status === 'idle' ? '#f0b232' :
+                                member.status === 'dnd' ? '#f23f43' : 'transparent',
+                zIndex: 10,
+              },
             }}
-          />
-          <Typography component="span" className="member-name">
+          >
+            <Box
+              component="img"
+              src={src}
+              alt={member.name}
+              sx={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                borderRadius: '50%',
+              }}
+            />
+          </Box>
+          <Typography
+            component="span"
+            sx={{
+              color: '#dbdee1',
+              fontSize: '1rem',
+              fontWeight: 500,
+              flex: 1,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
             {member.name}
           </Typography>
           {member.role === 'BOT' && (
             <Chip
               label="BOT"
               size="small"
-              classes={{
-                root: 'bubble-role',
+              sx={{
+                ml: 8,
+                fontSize: '0.75rem',
+                backgroundColor: '#5865f2',
+                color: '#fff',
               }}
-              sx={{ ml: 8, fontSize: '0.75rem', backgroundColor: '#5865f2', color: '#fff' }}
             />
           )}
         </Box>

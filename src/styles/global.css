@@ -1,0 +1,145 @@
+/* Global styles that remain */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #313338;
+  overflow: hidden;
+}
+
+body {
+  background: #313338;
+  color: #f2f3f5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Essential component styles that haven't been migrated yet */
+.profile-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #5865f2;
+  flex-shrink: 0;
+}
+
+.profile-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #23a559;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border: 2px solid #232428;
+}
+
+.profile-status.online {
+  background: #23a559;
+}
+
+.profile-status.idle {
+  background: #f0b232;
+}
+
+.profile-status.dnd {
+  background: #f23f43;
+}
+
+.sidebar-left-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #2b2d31;
+}
+
+.server-banner {
+  position: relative;
+  width: 100%;
+  height: 48px;
+  background: #111214;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid #1e1f22;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+.server-title {
+  color: #f2f3f5;
+  font-size: 1rem;
+  font-weight: 600;
+  text-shadow: none;
+  position: static;
+  padding: 0;
+  margin: 0;
+  z-index: auto;
+}
+
+.channel-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  background: #2b2d31;
+}
+
+.member-list {
+  width: 240px;
+  background: #2b2d31;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #1e1f22;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.member-list-title {
+  color: #949ba4;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.member {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.member:hover {
+  background: #35373c;
+}
+
+.member-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #5865f2;
+  flex-shrink: 0;
+}
+
+.member-name {
+  color: #dbdee1;
+  font-size: 1rem;
+  font-weight: 500;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

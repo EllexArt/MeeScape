@@ -1,17 +1,18 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import TagIcon from '@mui/icons-material/Tag';
+import { channelHeaderStyles, channelTitleStyles } from '../../theme/styles';
 
-type ChannelHeaderProps = {
+interface ChannelHeaderProps {
   channelName: string;
   children?: React.ReactNode;
-};
+}
 
 const ChannelHeader: React.FC<ChannelHeaderProps> = ({ channelName, children }) => (
-  <Box className="channel-header">
-    <Box display="flex" alignItems="center" gap={1}>
+  <Box sx={channelHeaderStyles}>
+    <Box sx={channelTitleStyles}>
       <TagIcon sx={{ color: '#80848e' }} />
-      <Typography className="channel-title" variant="h6">
+      <Typography variant="h6">
         {channelName}
       </Typography>
     </Box>

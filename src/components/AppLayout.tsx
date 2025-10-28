@@ -6,7 +6,9 @@ import ChatWindow from './chat-window';
 import ChannelList from './channel-list';
 import LanguageSelector from './language/LanguageSelector';
 import ChannelHeader from './sidebar/ChannelHeader';
-import { Box } from '@mui/material';
+import { Box, CssBaseline, ThemeProvider } from '@mui/material';
+import lightTheme from '../theme/lightTheme';
+import { discordLayoutStyles, sidebarLeftStyles, mainChatAreaStyles } from '../theme/styles';
 
 export type Profile = {
   name: string;
@@ -22,15 +24,20 @@ export type Channel = {
   type: string;
 };
 
+export type Choice<T = string> = {
+  text: string;
+  next: T;
+};
+
 export interface AppLayoutProps {
   lang: string;
   setLang: (lang: string) => void;
   profile: Profile;
   setProfile: (profile: Profile) => void;
   currentChannel: Channel;
-  messages: any[];
-  choices: any[];
-  onChoice: (choice: any) => void;
+  messages: import('../types/message.type').Message[];
+  choices: Choice<string>[];
+  onChoice: (choice: string) => void;
   onQuit: () => void;
   onReset?: () => void;
   goHome?: () => void;
@@ -51,7 +58,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   goHome,
   onShowSaves,
 }) => (
-  <Box className="discord-layout">
+    <ThemeProvider theme={lightTheme}>
+      <CssBaseline />
+      <Box sx={{ minHeight: '100vh', width: '100vw', overflow: 'hidden' }}>
+        <Box sx={discordLayoutStyles}>
     {/* Liste des serveurs (gauche) */}
     <ServerList
       onQuit={onQuit}
@@ -61,13 +71,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     />
 
     {/* Sidebar avec salons + profil */}
-    <Box className="sidebar-left">
+    <Box sx={sidebarLeftStyles}>
       <ChannelList />
       <ProfileBar profile={profile} setProfile={setProfile} />
     </Box>
 
     {/* Zone principale de chat */}
-    <Box className="main-chat-area">
+    <Box sx={mainChatAreaStyles}>
       <ChannelHeader channelName={currentChannel.name}>
         <LanguageSelector lang={lang} setLang={setLang} />
       </ChannelHeader>
@@ -77,6 +87,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     {/* Liste des membres (droite) */}
     <MemberList />
   </Box>
+      </Box>
+    </ThemeProvider>
 );
 
-export default AppLayout;
+  export default AppLayout;

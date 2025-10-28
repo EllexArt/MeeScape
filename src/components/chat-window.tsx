@@ -1,34 +1,36 @@
 import React from 'react';
 import MessageList from './message-list';
 import { Message } from '../types/message.type';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import { chatWindowStyles, choicesStyles, choiceButtonStyles } from '../theme/styles';
 
-export type Choice<T = any> = {
+export type Choice<T = string> = {
   text: string;
   next: T;
 };
 
-interface ChatWindowProps<T = any> {
+interface ChatWindowProps<T = string> {
   messages: Message[];
   choices?: Choice<T>[];
   onChoice?: (choice: T) => void;
 }
 
 const ChatWindow = <T,>({ messages, choices, onChoice }: ChatWindowProps<T>) => (
-  <Box className="chat-window">
+  <Box sx={chatWindowStyles}>
     {/* Zone scrollable des messages */}
     <MessageList messages={messages} />
     
     {/* Zone fixe des choix en bas */}
     {choices && choices.length > 0 && onChoice && (
-      <Box className="choices">
+      <Box sx={choicesStyles}>
         {choices.map((choice, idx) => (
-          <button
+          <Button
             key={idx}
+            sx={choiceButtonStyles}
             onClick={() => onChoice(choice.next)}
           >
             {choice.text}
-          </button>
+          </Button>
         ))}
       </Box>
     )}

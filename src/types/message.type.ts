@@ -1,4 +1,5 @@
 export type Message = {
+  id?: string;
   avatar: string;
   character: string;
   text: string;

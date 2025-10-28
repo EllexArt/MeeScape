@@ -22,7 +22,7 @@ const SAVES_KEY = 'meescape_saves';
 type SaveData = {
   name: string;
   date: string;
-  data: any;
+  data: unknown;
 };
 
 function getSaves(): SaveData[] {
@@ -30,7 +30,7 @@ function getSaves(): SaveData[] {
   return raw ? JSON.parse(raw) : [];
 }
 
-function saveCurrent(name: string, data: any) {
+function saveCurrent(name: string, data: unknown) {
   const saves = getSaves();
   saves.push({ 
     name, 
@@ -47,10 +47,10 @@ function deleteSave(idx: number) {
 }
 
 type SavesManagerProps = {
-  onLoad: (data: any) => void;
+  onLoad: (data: unknown) => void;
   onClose: () => void;
   onSave?: () => void;
-  currentGameState?: any;
+  currentGameState?: unknown;
 };
 
 const SavesManager: React.FC<SavesManagerProps> = ({ 
@@ -79,7 +79,7 @@ const SavesManager: React.FC<SavesManagerProps> = ({
     }
   };
 
-  const handleLoad = (data: any) => {
+  const handleLoad = (data: unknown) => {
     onLoad(data);
     onClose();
   };
@@ -118,24 +118,51 @@ const SavesManager: React.FC<SavesManagerProps> = ({
       maxWidth="sm"
       fullWidth
       PaperProps={{
-        className: 'saves-popup-content'
+        sx: {
+          backgroundColor: '#2b2d31',
+          color: '#f2f3f5',
+        }
       }}
     >
       {/* Header */}
-      <DialogTitle className="saves-popup-header">
+      <DialogTitle
+        sx={{
+          backgroundColor: '#1e1f22',
+          borderBottom: '1px solid #232428',
+          padding: '16px 24px',
+        }}
+      >
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="h6">Gestion des sauvegardes</Typography>
-          <IconButton onClick={onClose} size="small" className="saves-popup-close">
+          <IconButton
+            onClick={onClose}
+            size="small"
+            sx={{
+              color: '#b5bac1',
+              '&:hover': {
+                color: '#dbdee1',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              },
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
 
       {/* Body */}
-      <DialogContent className="saves-popup-body" dividers>
+      <DialogContent
+        dividers
+        sx={{
+          backgroundColor: '#2b2d31',
+          padding: '24px',
+          maxHeight: '60vh',
+          overflowY: 'auto',
+        }}
+      >
         {/* Create new save section */}
         {currentGameState && (
-          <Box className="saves-new-save" sx={{ mb: 3 }}>
+          <Box sx={{ mb: 3 }}>
             <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
               Créer une nouvelle sauvegarde
             </Typography>
@@ -153,7 +180,6 @@ const SavesManager: React.FC<SavesManagerProps> = ({
                 }}
                 inputProps={{ maxLength: 50 }}
                 autoFocus
-                className="saves-input"
               />
               <Button
                 variant="contained"
@@ -161,7 +187,6 @@ const SavesManager: React.FC<SavesManagerProps> = ({
                 onClick={handleCreateSave}
                 disabled={!saveName.trim()}
                 startIcon={<SaveIcon />}
-                className="saves-create-btn"
               >
                 Sauvegarder
               </Button>
@@ -172,13 +197,13 @@ const SavesManager: React.FC<SavesManagerProps> = ({
         <Divider sx={{ my: 2 }} />
 
         {/* Saves list */}
-        <Box className="saves-list-section">
+        <Box>
           <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>
             Sauvegardes ({saves.length})
           </Typography>
           
           {saves.length === 0 ? (
-            <Box className="saves-empty" textAlign="center" py={5}>
+            <Box textAlign="center" py={5}>
               <Typography variant="h3" sx={{ opacity: 0.5, mb: 2 }}>
                 💾
               </Typography>
@@ -187,11 +212,10 @@ const SavesManager: React.FC<SavesManagerProps> = ({
               </Typography>
             </Box>
           ) : (
-            <List className="saves-list">
+            <List>
               {saves.map((save, idx) => (
                 <ListItem
                   key={idx}
-                  className="saves-item"
                   sx={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -206,15 +230,15 @@ const SavesManager: React.FC<SavesManagerProps> = ({
                   }}
                 >
                   <Box flex={1}>
-                    <Typography variant="body1" className="saves-item-name">
+                    <Typography variant="body1">
                       {save.name}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary" className="saves-item-date">
+                    <Typography variant="caption" color="text.secondary">
                       {formatDate(save.date)}
                     </Typography>
                   </Box>
                   
-                  <Box display="flex" gap={1} className="saves-item-actions">
+                  <Box display="flex" gap={1}>
                     <Button
                       variant="contained"
                       size="small"
@@ -226,7 +250,6 @@ const SavesManager: React.FC<SavesManagerProps> = ({
                       size="small"
                       color="error"
                       onClick={(e) => handleDelete(idx, e)}
-                      className="delete-btn"
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -239,7 +262,7 @@ const SavesManager: React.FC<SavesManagerProps> = ({
       </DialogContent>
 
       {/* Footer */}
-      <DialogActions className="saves-popup-footer">
+      <DialogActions>
         <Button onClick={onClose} variant="outlined">
           Fermer
         </Button>

@@ -4,9 +4,10 @@ declare global {
   interface Window {
     api: {
       ping: () => void;
-      send: (channel: string, data?: any) => void;
-      on: (channel: string, callback: (data: any) => void) => void;
+      send: (channel: string, data?: unknown) => void;
+      on: (channel: string, callback: (data: unknown) => void) => void;
     };
+    testReact?: () => void;
   }
 }
 declare module "*.png";

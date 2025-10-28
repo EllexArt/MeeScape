@@ -1,4 +1,4 @@
-import './styles/index.css';
+import './styles/global.css';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './app';
@@ -25,7 +25,7 @@ if (!rootElement) {
 }
 
 // Test global
-(window as any).testReact = () => {
+window.testReact = () => {
   console.log('React is available:', typeof React !== 'undefined');
   console.log('Root element:', document.getElementById('root'));
 };

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Button, Stack } from '@mui/material';
 
-export type Choice<T = any> = {
+export type Choice<T = unknown> = {
   text: string;
   next: T; // générique pour typer correctement le "next"
 };
 
-interface ChoiceButtonsProps<T = any> {
+interface ChoiceButtonsProps<T = unknown> {
   choices: Choice<T>[];
   onChoice: (next: T) => void;
 }

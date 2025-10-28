@@ -2,10 +2,10 @@ import React from 'react';
 import { Avatar } from '@mui/material';
 
 import aliceImg from '../assets/avatars/alice.png';
-import bobImg from '../assets/avatars/bob.png';
-import charlieImg from '../assets/avatars/charlie.png';
+import bobImg from '../assets/avatars/bob.jpg';
+import charlieImg from '../assets/avatars/charlie.jpg';
 import mee6Img from '../assets/avatars/mee6.jpg';
-import userImg from '../assets/avatars/user.png';
+import userImg from '../assets/avatars/user.jpg';
 
 type CharacterAvatarProps = {
   avatar: string;
@@ -15,10 +15,10 @@ type CharacterAvatarProps = {
 
 const avatarMap: Record<string, string> = {
   'alice.png': aliceImg,
-  'bob.png': bobImg,
-  'charlie.png': charlieImg,
+  'bob.jpg': bobImg,
+  'charlie.jpg': charlieImg,
   'mee6.jpg': mee6Img,
-  'user.png': userImg,
+  'user.jpg': userImg,
 };
 
 const CharacterAvatar: React.FC<CharacterAvatarProps> = ({ avatar, name, size = 40 }) => {

@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { getNodeById, setLanguage, getCurrentLanguage } from './dialogueEngine';
+import { Message } from '../types/message.type';
 
 const DIALOGUE_KEY = 'meescape_dialogue';
 
 export function useDialogue(initialId = 'start', lang = 'fr') {
   const previousLang = useRef(lang);
   const [currentId, setCurrentId] = useState(initialId);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [initialized, setInitialized] = useState(false);
 
   // ⚠️ Définir la langue au montage ET quand elle change
@@ -88,7 +89,7 @@ export function useDialogue(initialId = 'start', lang = 'fr') {
 
   const getChoiceHandler = useCallback(() => {
     return (nextId: string) => {
-      const choice = node?.choices?.find((c: any) => c.next === nextId);
+      const choice = node?.choices?.find((c) => c.next === nextId);
       makeChoice(nextId, choice?.text);
     };
   }, [node, makeChoice]);
